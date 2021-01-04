@@ -14,8 +14,9 @@ def clean_data2(data):
 def save_plot_to_file(dataframe, title,start_date, end_date, filename):
     """ la fonction save_plot_to_file prend comme paramètres : dataframe, title, start_date, end_date, nom du fichier.
     elle crée une figure de 10x10 pouces, dpi100 et constituée de 3 graphes, qui ont l'axe des X en commun. elle permet d'afficher et de grapher les données d'un fichier json. elle définie 3 variables(data1, data2, data3) les listes de données de chaques labels, (label1 , label2 , label3) et time_index.
-    puis elle crée un objet dataframe nommée humidity_dataframe. Utilise la foncton clean_data sur les trois listes ; data1, data2, data3. extraction et stockage des valeurs de chaque data (par labels) de la dataframe dans tois variables: Values1, values2, values3. Extraction de l'index des valeurs.
-    Affichage sur les trois graphes, remplissage des zones par couleur,et les limites des remplissages, title de la figure, légendes des 3 graphes, yticks placées au milieu des seuils et xticks plus les labels de chacunes """
+    puis elle crée un objet dataframe nommée humidity_dataframe. 
+    Utilise la foncton clean_data sur les trois listes ; data1, data2, data3. puis l'extraction et stockage des valeurs de chaque data (par labels) de la dataframe dans tois variables: Values1, values2, values3. Extraction de l'index des valeurs.
+    Affichage sur les trois graphes, remplissage des zones par couleur, avec les limites des remplissages, titre de la figure, légendes des 3 graphes, yticks placées au milieu des seuils et xticks plus les labels de chacunes """
     pas = 0
     fig, (ax1, ax2, ax3) = plt.subplots(3,figsize=(10,10),dpi=100,sharex = True)
     data1 = dataframe['datasets'][0]['data']
