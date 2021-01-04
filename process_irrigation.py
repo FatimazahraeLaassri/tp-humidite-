@@ -3,15 +3,21 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+""" la fonction clean_data2 a un seul paramètre data de type list, elle permet de remplacer les valeurs de la listes supérieurs à 200 par la valeur nan de la bibliothèque numpy """
 def clean_data2(data):
     for j in range(len(data)):
          if data[j]==200:
                 data[j]=np.nan
     return data
-""" la fonction clean_data2 a un seul paramètre data de type list, elle permet de remplacer les valeurs de la listes supérieurs à 200 par la valeur nan de la bibliothèque numpy """
+
+
+""" la fonction save_plot_to_file prend comme paramètres : dataframe, title, start_date, end_date, nom du fichier.
+elle crée une figure de 10x10 pouces, dpi100 et constituée de 3 graphes, qui ont l'axe des X en commun. elle permet d'afficher et de grapher les données d'un fichier json. elle définie 3 variables(data1, data2, data3) les listes de données de chaques labels, (label1 , label2 , label3) et time_index.
+puis elle crée un objet dataframe nommée humidity_dataframe. Utilise la foncton clean_data sur les trois listes ; data1, data2, data3. extraction et stockage des valeurs de chaque data (par labels) de la dataframe dans tois variables: Values1, values2, values3. Extraction de l'index des valeurs.
+Affichage sur les trois graphes, remplissage des zones par couleur,et les limites des remplissages, title de la figure, légendes des 3 graphes, yticks placées au milieu des seuils et xticks plus les labels de chacunes"""
 
 def save_plot_to_file(dataframe, title,start_date, end_date, filename):
+    pas = 0
     fig, (ax1, ax2, ax3) = plt.subplots(3,figsize=(10,10),dpi=100,sharex = True)
     data1 = dataframe['datasets'][0]['data']
     data2 = dataframe['datasets'][1]['data']
@@ -71,18 +77,28 @@ def save_plot_to_file(dataframe, title,start_date, end_date, filename):
     ax3.set_yticks([15/2,(30+15)/2,(30+60)/2,(60+100)/2,(100+200)/2])
     ax3.set_yticklabels(['saturated','too wet','perfect','plan to water','dry'])
     ax3.set_xticks([(len(values3)/7)/2,2*len(values3)/7-(len(values3)/7)/2,3*len(values3)/7-(len(values3)/7)/2,4*len(values3)/7-(len(values3)/7)/2,5*len(values3)/7-(len(values3)/7)/2,6*len(values3)/7-(len(values3)/7)/2,(7*len(values3)/7)-(len(values3)/7)/2])
-    ax3.set_xticklabels(['2020-06-05','2020-06-09','2020-06-13','2020-06-17','2020-06-21','2020-06-25','2020-06-29'])
+    tick = []
+    l = []
+    l2 = []
+    ind = 0
+    for i in range(len(index)):
+        ind = index[i][0:11]
+        l.append(ind)
+    l2.append(l[0])
+    for j in range(len(l)): 
+        if l[j] not in l2:
+            l2.append(l[j])
+    pas = int(len(l2)/7)
+    for k in range(3,len(l2),pas):
+        tick.append(l2[k]) 
+    ax3.set_xticklabels(tick)
     ax3.set_xlim([0,len(values3)])
     ax3.set_ylim([0,200])
     fig.autofmt_xdate()
     ax3.legend(ax3.plot(index,values3), ('3: 1m/30cm [kPa]',), loc = 'upper left')
   
     
-""" la fonction save_plot_to_file prend comme paramètres : dataframe, title, start_date, end_date, nom du fichier.
-elle crée une figure de 10x10 pouces, dpi100 et constituée de 3 graphes, qui ont l'axe des X en commun. elle permet d'afficher et de grapher les données d'un fichier json. elle définie 3 variables(data1, data2, data3) les listes de données de chaques labels, (label1 , label2 , label3) et time_index.
-puis elle crée un objet dataframe nommée humidity_dataframe. Utilise la foncton clean_data sur les trois listes ; data1, data2, data3. extraction et stockage des valeurs de chaque data (par labels) de la dataframe dans tois variables: Values1, values2, values3. Extraction de l'index des valeurs.
-Affichage sur les trois graphes, remplissage des zones par couleur,et les limites des remplissages, title de la figure, légendes des 3 graphes, yticks placées au milieu des seuils et xticks plus les labels de chacunes"""
- 
+
 if __name__ == '__main__':
     with open('eco-sensors_irrigation_2020-06-01_2020-08-31.json') as fichier:
         data_dict = json.load(fichier)
